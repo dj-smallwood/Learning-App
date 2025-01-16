@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-color: #FF6B6B;
+    --secondary-color: #4ECDC4;
+    --background-color: #F7F9FC;
+    --text-color: #2D3436;
+    --card-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg shadow-lg;
+    box-shadow: var(--card-shadow);
+  }
+}
+
+@layer utilities {
+  .bg-primary {
+    background-color: var(--primary-color);
+  }
+  .bg-secondary {
+    background-color: var(--secondary-color);
+  }
+  .bg-custom {
+    background-color: var(--background-color);
+  }
+  .text-custom {
+    color: var(--text-color);
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+.sprite-animation {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
