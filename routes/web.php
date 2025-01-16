@@ -24,12 +24,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/learn/{subject}', [LearnController::class, 'subject'])->name('learn.subject');
     Route::post('/flashcards/{flashcard}/complete', [FlashcardCompletionController::class, 'store'])
         ->name('flashcards.complete');
+    Route::get('/flashcards', [FlashcardController::class, 'index'])->name('flashcards.index');
     Route::get('/flashcards/create/{subject?}', [FlashcardController::class, 'create'])->name('flashcards.create');
+    Route::post('/flashcards', [FlashcardController::class, 'store'])->name('flashcards.store');
     Route::get('/flashcards/{subject}', [FlashcardController::class, 'show'])->name('flashcards.show');
-    Route::resource('flashcards', FlashcardController::class)->except(['show', 'create']);
+    Route::get('/flashcards/{flashcard}/edit', [FlashcardController::class, 'edit'])->name('flashcards.edit');
+    Route::put('/flashcards/{flashcard}', [FlashcardController::class, 'update'])->name('flashcards.update');
+    Route::delete('/flashcards/{flashcard}', [FlashcardController::class, 'destroy'])->name('flashcards.destroy');
+
     Route::post('/reset-points', [UserController::class, 'resetPoints'])->name('user.reset-points');
     Route::post('/reset-subject/{subject}', [UserController::class, 'resetSubjectProgress'])
         ->name('user.reset-subject');
+    Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 });
 
 Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');

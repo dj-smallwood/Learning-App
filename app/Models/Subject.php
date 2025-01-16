@@ -15,4 +15,14 @@ class Subject extends Model
     {
         return $this->hasMany(Flashcard::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // When a subject is deleted, also delete related flashcards
+        static::deleting(function ($subject) {
+            $subject->flashcards()->delete();
+        });
+    }
 } 

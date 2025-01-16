@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Flashcard;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FlashcardController extends Controller
 {
@@ -73,10 +74,38 @@ class FlashcardController extends Controller
 
     public function destroy(Flashcard $flashcard)
     {
-        $subject_id = $flashcard->subject_id;
-        $flashcard->delete();
+        try {
+            \Log::info('Delete request received for flashcard: ' . $flashcard->id);
+            
+            // Store subject_id before deletion
+            $subject_id = $flashcard->subject_id;
+            
+            DB::transaction(function () use ($flashcard) {
+                $user = auth()->user();
+                
+                // Check if the flashcard was completed and deduct points if it was
+                if ($user->completedFlashcards->contains($flashcard)) {
+                    \Log::info('Deducting points for completed flashcard');
+                    $user->points = max(0, $user->points - 10);
+                    $user->save();
+                    
+                    // Remove the completion record
+                    $user->completedFlashcards()->detach($flashcard->id);
+                }
+                
+                // Delete the flashcard
+                \Log::info('Deleting flashcard');
+                $flashcard->delete();
+                \Log::info('Flashcard deleted successfully');
+            });
 
-        return redirect()->route('flashcards.show', ['subject' => $subject_id])
-            ->with('success', 'Flashcard deleted successfully.');
+            return redirect()->route('flashcards.show', $subject_id)
+                ->with('success', 'Flashcard deleted successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting flashcard: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            return redirect()->back()
+                ->with('error', 'Error deleting flashcard: ' . $e->getMessage());
+        }
     }
 } 

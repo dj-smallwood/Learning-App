@@ -80,6 +80,7 @@
                                     @if($subject->completed_count > 0)
                                         <x-subject-reset-button :subject="$subject" />
                                     @endif
+                                    <x-subject-delete-button :subject="$subject" />
                                 </div>
                             </div>
                         </div>

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             // ... other seeders ...
             FlashcardSeeder::class,
             BulkTestDataSeeder::class,
+            CompletedFlashcardsSeeder::class,
         ]);
     }
 }

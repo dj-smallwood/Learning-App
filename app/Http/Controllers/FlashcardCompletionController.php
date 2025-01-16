@@ -20,9 +20,7 @@ class FlashcardCompletionController extends Controller
         }
 
         $oldPoints = $user->points;
-        
-        // Check if the flashcard belongs to the History subject
-        $pointsToAdd = $flashcard->subject->name === 'History' ? 25 : 10;
+        $pointsToAdd = 10; // All subjects now worth 10 points
         $user->points += $pointsToAdd;
         $user->save();
 

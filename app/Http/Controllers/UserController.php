@@ -29,14 +29,12 @@ class UserController extends Controller
         $user = auth()->user();
         
         DB::transaction(function () use ($user, $subject) {
-            // Get points to deduct (10 points per completed card, 25 for history)
+            // Get points to deduct (10 points per completed card)
             $completedCards = $user->completedFlashcards()
                 ->where('subject_id', $subject->id)
                 ->get();
             
-            $pointsToDeduct = $completedCards->sum(function ($flashcard) {
-                return $flashcard->subject->name === 'History' ? 25 : 10;
-            });
+            $pointsToDeduct = $completedCards->count() * 10;
             
             // Update user points
             $user->points = max(0, $user->points - $pointsToDeduct);

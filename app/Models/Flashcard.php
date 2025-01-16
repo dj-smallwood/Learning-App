@@ -21,4 +21,14 @@ class Flashcard extends Model
         return $this->belongsToMany(User::class, 'completed_flashcards')
                     ->withTimestamps();
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // When a flashcard is deleted, also remove completion records
+        static::deleting(function ($flashcard) {
+            $flashcard->completedByUsers()->detach();
+        });
+    }
 } 
